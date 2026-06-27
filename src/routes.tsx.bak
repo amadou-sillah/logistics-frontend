@@ -1,0 +1,52 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Registration from "./pages/Registration";
+import Layout from './components/layout/Layout';
+import Registration from "./pages/Registration";
+import Landing from './pages/Landing';
+import Registration from "./pages/Registration";
+import Login from './pages/Login';
+import Registration from "./pages/Registration";
+import Dashboard from './pages/Dashboard';
+import Registration from "./pages/Registration";
+import Tracking from './pages/Tracking';
+import Registration from "./pages/Registration";
+import Admin from './pages/Admin';
+import Registration from "./pages/Registration";
+import Agent from './pages/Agent';
+import Registration from "./pages/Registration";
+import { useAuth } from './hooks/useAuth';
+import Registration from "./pages/Registration";
+
+function ProtectedRoute({ children }: { children: JSX.Element }) {
+  const { user } = useAuth();
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
+export default function AppRoutes() {
+  const { user } = useAuth();
+
+  return (
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/app"
+        element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<Navigate to="/app/dashboard" replace />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="tracking" element={<Tracking />} />
+        <Route path="admin" element={<Admin />} />
+        <Route path="agent" element={<Agent />} />
+      </Route>
+        <Route path="register" element={<Registration />} />
+    </Routes>
+  );
+}
