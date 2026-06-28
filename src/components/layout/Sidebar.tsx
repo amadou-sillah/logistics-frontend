@@ -5,9 +5,6 @@ import {
   Truck, 
   Users, 
   Search, 
-  Plus, 
-  Menu, 
-  X, 
   LogOut,
   Warehouse,
   FileText,
@@ -15,9 +12,7 @@ import {
   UserCog
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
-import { useTheme } from '../../hooks/useTheme';
 import ThemeToggle from '../ui/ThemeToggle';
-import { useState } from 'react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -26,7 +21,6 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const { user, logout } = useAuth();
-  const { theme } = useTheme();
 
   const navLinks = [
     { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -52,17 +46,13 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex h-16 items-center justify-between px-4 border-b border-secondary-200 dark:border-secondary-800">
+        {/* Logo */}
+        <div className="flex h-16 items-center px-4 border-b border-secondary-200 dark:border-secondary-800">
           <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">LogiTrack</h1>
-          <button
-            className="lg:hidden text-secondary-500 hover:text-secondary-700"
-            onClick={() => setIsOpen(false)}
-          >
-            <X className="h-6 w-6" />
-          </button>
         </div>
 
-        <nav className="flex flex-col gap-1 p-4">
+        {/* Navigation */}
+        <nav className="flex flex-col gap-1 p-4 overflow-y-auto h-[calc(100vh-12rem)]">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
@@ -82,7 +72,8 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 border-t border-secondary-200 dark:border-secondary-800 p-4">
+        {/* User section */}
+        <div className="absolute bottom-0 left-0 right-0 border-t border-secondary-200 dark:border-secondary-800 p-4 bg-white dark:bg-secondary-900">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
