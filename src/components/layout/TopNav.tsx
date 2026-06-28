@@ -1,3 +1,4 @@
+import NotificationBell from "../notifications/NotificationBell";
 import { Bell, Search, User, X } from 'lucide-react';
 import ThemeToggle from '../ui/ThemeToggle';
 import Button from '../ui/Button';
@@ -104,6 +105,7 @@ export default function TopNav() {
 
       <div className="flex items-center space-x-2">
         <ThemeToggle />
+          <NotificationBell />
         <div className="relative">
           <Button
             variant="ghost"
