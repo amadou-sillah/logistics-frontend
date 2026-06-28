@@ -13,9 +13,23 @@ import Agents from './pages/Agents';
 import Reports from './pages/Reports';
 import AuditLogs from './pages/AuditLogs';
 import { useAuth } from './hooks/useAuth';
+import { Skeleton } from './components/ui/Skeleton';
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  
+  // Show loading spinner while checking auth
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary-500 border-t-transparent" />
+          <p className="text-secondary-500">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  
   if (!user) {
     return <Navigate to="/login" replace />;
   }
@@ -23,8 +37,6 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
 }
 
 export default function AppRoutes() {
-  const { user } = useAuth();
-
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
