@@ -1,98 +1,113 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Package, 
-  Users, 
   Truck, 
-  LogOut, 
-  ChevronLeft,
-  ChevronRight,
-  UserCircle,
+  Users, 
+  Search, 
+  Plus, 
+  Menu, 
+  X, 
+  LogOut,
+  Warehouse,
+  FileText,
+  History,
+  UserCog
 } from 'lucide-react';
-import { useState } from 'react';
-import { twMerge } from 'tailwind-merge';
-import Button from '../ui/Button';
 import { useAuth } from '../../hooks/useAuth';
+import { useTheme } from '../../hooks/useTheme';
+import ThemeToggle from '../ui/ThemeToggle';
+import { useState } from 'react';
 
-const navItems = [
-  { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/app/tracking', icon: Package, label: 'Tracking' },
-  { to: '/app/admin', icon: Users, label: 'Admin' },
-  { to: '/app/agent', icon: Truck, label: 'Agent' },
-];
+interface SidebarProps {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+}
 
-export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { theme } = useTheme();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const navLinks = [
+    { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { to: '/app/tracking', icon: Search, label: 'Tracking' },
+    { to: '/app/admin', icon: Users, label: 'Admin' },
+    { to: '/app/agent', icon: Truck, label: 'Agent' },
+    { to: '/app/warehouses', icon: Warehouse, label: 'Warehouses' },
+    { to: '/app/agents', icon: UserCog, label: 'Agents' },
+    { to: '/app/reports', icon: FileText, label: 'Reports' },
+    { to: '/app/audit-logs', icon: History, label: 'Audit Logs' },
+  ];
 
   return (
-    <motion.aside
-      animate={{ width: collapsed ? 72 : 256 }}
-      className="relative flex h-full flex-col border-r border-secondary-200 bg-white dark:border-secondary-800 dark:bg-secondary-900"
-      transition={{ duration: 0.2, ease: 'easeInOut' }}
-    >
-      <div className="flex h-16 items-center justify-between px-4">
-        {!collapsed && (
-          <span className="text-xl font-bold text-primary-600 dark:text-primary-400">
-            LogiTrack
-          </span>
-        )}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setCollapsed(!collapsed)}
-          className="ml-auto rounded-full p-1"
-        >
-          {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
-        </Button>
-      </div>
+    <>
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={() => setIsOpen(false)} />
+      )}
 
-      <nav className="flex-1 space-y-1 px-2 py-4">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              twMerge(
-                'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200',
-                isActive
-                  ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300'
-                  : 'text-secondary-600 hover:bg-secondary-100 dark:text-secondary-400 dark:hover:bg-secondary-800',
-                collapsed && 'justify-center'
-              )
-            }
+      {/* Sidebar */}
+      <aside
+        className={`fixed left-0 top-0 z-50 h-screen w-64 transform bg-white dark:bg-secondary-900 border-r border-secondary-200 dark:border-secondary-800 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="flex h-16 items-center justify-between px-4 border-b border-secondary-200 dark:border-secondary-800">
+          <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">LogiTrack</h1>
+          <button
+            className="lg:hidden text-secondary-500 hover:text-secondary-700"
+            onClick={() => setIsOpen(false)}
           >
-            <item.icon className="h-5 w-5 shrink-0" />
-            {!collapsed && <span className="ml-3">{item.label}</span>}
-          </NavLink>
-        ))}
-      </nav>
+            <X className="h-6 w-6" />
+          </button>
+        </div>
 
-      <div className="border-t border-secondary-200 p-4 dark:border-secondary-800">
-        {!collapsed ? (
-          <div className="flex items-center space-x-3">
-            <UserCircle className="h-8 w-8 text-secondary-400" />
-            <div className="flex-1 truncate">
-              <p className="text-sm font-medium">{user?.name || 'Guest'}</p>
-              <p className="text-xs text-secondary-500">{user?.role || 'Unknown'}</p>
+        <nav className="flex flex-col gap-1 p-4">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  isActive
+                    ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400'
+                    : 'text-secondary-600 hover:bg-secondary-100 dark:text-secondary-300 dark:hover:bg-secondary-800'
+                }`
+              }
+              onClick={() => setIsOpen(false)}
+            >
+              <link.icon className="h-5 w-5" />
+              <span>{link.label}</span>
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="absolute bottom-0 left-0 right-0 border-t border-secondary-200 dark:border-secondary-800 p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                <span className="text-sm font-medium text-primary-600 dark:text-primary-400">
+                  {user?.name?.[0] || 'U'}
+                </span>
+              </div>
+              <div className="text-sm">
+                <p className="font-medium">{user?.name || 'User'}</p>
+                <p className="text-xs text-secondary-500">{user?.role || 'User'}</p>
+              </div>
             </div>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              <LogOut className="h-4 w-4" />
-            </Button>
+            <button
+              onClick={logout}
+              className="rounded-lg p-2 text-secondary-500 hover:bg-secondary-100 dark:hover:bg-secondary-800"
+              title="Logout"
+            >
+              <LogOut className="h-5 w-5" />
+            </button>
           </div>
-        ) : (
-          <Button variant="ghost" size="sm" className="w-full justify-center" onClick={handleLogout}>
-            <LogOut className="h-5 w-5" />
-          </Button>
-        )}
-      </div>
-    </motion.aside>
+          <div className="mt-2 flex justify-end">
+            <ThemeToggle />
+          </div>
+        </div>
+      </aside>
+    </>
   );
 }
