@@ -24,7 +24,7 @@ export default function Warehouses() {
 
   const fetchWarehouses = async () => {
     try {
-      const res = await api.get('/warehouses');
+      const res = await api.get('/warehousess');
       setWarehouses(res.data);
     } catch (err) {
       toast.error('Failed to load warehouses');
@@ -38,7 +38,7 @@ export default function Warehouses() {
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this warehouse?')) return;
     try {
-      await api.delete(`/warehouses/${id}`);
+      await api.delete(`/warehousess/${id}`);
       toast.success('Warehouse deleted');
       setWarehouses(warehouses.filter(w => w.id !== id));
     } catch (err) {
@@ -49,7 +49,7 @@ export default function Warehouses() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await api.post('/warehouses', formData);
+      const res = await api.post('/warehousess', formData);
       toast.success('Warehouse created');
       setWarehouses([res.data, ...warehouses]);
       setShowModal(false);
