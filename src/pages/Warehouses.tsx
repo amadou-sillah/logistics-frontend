@@ -4,6 +4,7 @@ import { Warehouse, Plus, Trash2, X } from 'lucide-react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import DataTable from '../components/tables/DataTable';
+import { Skeleton } from '../components/ui/Skeleton';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -54,7 +55,7 @@ export default function Warehouses() {
       setShowModal(false);
       setFormData({ name: '', location: '', capacity: 0 });
     } catch (err) {
-      toast.error('Failed to create warehouse');
+      toast.error('Failed to create warehouse: ' + (err as any).response?.data?.message || 'Unknown error');
     }
   };
 
@@ -74,7 +75,14 @@ export default function Warehouses() {
     }
   ];
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div>
+        <Skeleton className="h-10 w-48 mb-8" />
+        <Skeleton className="h-64 rounded-xl" />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -87,6 +95,11 @@ export default function Warehouses() {
       </motion.div>
       <Card className="p-6">
         <DataTable data={warehouses} columns={columns} pageSize={5} />
+        {warehouses.length === 0 && (
+          <div className="text-center py-8 text-secondary-500">
+            No warehouses found. Add your first warehouse!
+          </div>
+        )}
       </Card>
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">

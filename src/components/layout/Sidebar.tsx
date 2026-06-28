@@ -9,7 +9,8 @@ import {
   Warehouse,
   FileText,
   History,
-  UserCog
+  UserCog,
+  ClipboardList
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import ThemeToggle from '../ui/ThemeToggle';
@@ -24,11 +25,11 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
   const navLinks = [
     { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: '/app/tracking', icon: Search, label: 'Tracking' },
-    { to: '/app/admin', icon: Users, label: 'Admin' },
-    { to: '/app/agent', icon: Truck, label: 'Agent' },
+    { to: '/app/tracking', icon: Search, label: 'Track Shipment' },
+    { to: '/app/admin', icon: Users, label: 'Admin Panel' },
+    { to: '/app/agent', icon: ClipboardList, label: 'My Tasks' },
     { to: '/app/warehouses', icon: Warehouse, label: 'Warehouses' },
-    { to: '/app/agents', icon: UserCog, label: 'Agents' },
+    { to: '/app/agents', icon: UserCog, label: 'Manage Agents' },
     { to: '/app/reports', icon: FileText, label: 'Reports' },
     { to: '/app/audit-logs', icon: History, label: 'Audit Logs' },
   ];
