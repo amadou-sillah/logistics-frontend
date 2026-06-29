@@ -49,7 +49,6 @@ export default function Login() {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-primary-600 dark:text-primary-400">LogiTrack</h1>
             <p className="text-secondary-500 dark:text-secondary-400 mt-2">Sign in to your account</p>
-            <p className="text-xs text-secondary-400 mt-1">Smart Logistics for Modern Business</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
