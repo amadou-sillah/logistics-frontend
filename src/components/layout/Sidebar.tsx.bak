@@ -1,15 +1,14 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-  LayoutDashboard,
-  Package,
-  Users,
-  Truck,
-  LogOut,
+import { 
+  LayoutDashboard, 
+  Package, 
+  Users, 
+  Truck, 
+  LogOut, 
   ChevronLeft,
   ChevronRight,
   UserCircle,
-  X,
 } from 'lucide-react';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
@@ -23,12 +22,7 @@ const navItems = [
   { to: '/app/agent', icon: Truck, label: 'Agent' },
 ];
 
-interface SidebarProps {
-  mobileOpen?: boolean;
-  setMobileOpen?: (open: boolean) => void;
-}
-
-export default function Sidebar({ mobileOpen = false, setMobileOpen }: SidebarProps) {
+export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -38,42 +32,33 @@ export default function Sidebar({ mobileOpen = false, setMobileOpen }: SidebarPr
     navigate('/login');
   };
 
-  const content = (
-    <>
-      <div className="flex h-16 items-center justify-between px-4 shrink-0">
+  return (
+    <motion.aside
+      animate={{ width: collapsed ? 72 : 256 }}
+      className="relative flex h-full flex-col border-r border-secondary-200 bg-white dark:border-secondary-800 dark:bg-secondary-900"
+      transition={{ duration: 0.2, ease: 'easeInOut' }}
+    >
+      <div className="flex h-16 items-center justify-between px-4">
         {!collapsed && (
           <span className="text-xl font-bold text-primary-600 dark:text-primary-400">
             LogiTrack
           </span>
         )}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setCollapsed(!collapsed)}
-            className="hidden lg:flex rounded-full p-1"
-          >
-            {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
-          </Button>
-          {mobileOpen && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setMobileOpen?.(false)}
-              className="lg:hidden rounded-full p-1"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          )}
-        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setCollapsed(!collapsed)}
+          className="ml-auto rounded-full p-1"
+        >
+          {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+        </Button>
       </div>
 
-      <nav className="flex-1 space-y-1 px-2 py-4 overflow-y-auto">
+      <nav className="flex-1 space-y-1 px-2 py-4">
         {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
-            onClick={() => setMobileOpen?.(false)}
             className={({ isActive }) =>
               twMerge(
                 'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200',
@@ -90,10 +75,10 @@ export default function Sidebar({ mobileOpen = false, setMobileOpen }: SidebarPr
         ))}
       </nav>
 
-      <div className="border-t border-secondary-200 p-4 dark:border-secondary-800 shrink-0">
+      <div className="border-t border-secondary-200 p-4 dark:border-secondary-800">
         {!collapsed ? (
           <div className="flex items-center space-x-3">
-            <UserCircle className="h-8 w-8 text-secondary-400 shrink-0" />
+            <UserCircle className="h-8 w-8 text-secondary-400" />
             <div className="flex-1 truncate">
               <p className="text-sm font-medium">{user?.name || 'Guest'}</p>
               <p className="text-xs text-secondary-500">{user?.role || 'Unknown'}</p>
@@ -108,27 +93,6 @@ export default function Sidebar({ mobileOpen = false, setMobileOpen }: SidebarPr
           </Button>
         )}
       </div>
-    </>
-  );
-
-  return (
-    <>
-      <div
-        className={`fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden ${
-          mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={() => setMobileOpen?.(false)}
-      />
-      <motion.aside
-        animate={{ x: mobileOpen ? 0 : -280 }}
-        initial={{ x: -280 }}
-        transition={{ duration: 0.2, ease: 'easeInOut' }}
-        className={`fixed left-0 top-0 z-50 h-full w-72 bg-white dark:bg-secondary-900 border-r border-secondary-200 dark:border-secondary-800 flex flex-col lg:static lg:z-auto lg:translate-x-0 ${
-          mobileOpen ? 'shadow-xl' : ''
-        }`}
-      >
-        {content}
-      </motion.aside>
-    </>
+    </motion.aside>
   );
 }

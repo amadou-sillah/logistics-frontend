@@ -124,7 +124,7 @@ export default function Admin() {
       header: 'Actions',
       render: (_, row: User) => (
         <Button
-          variant="destructive"
+          variant="danger"
           size="sm"
           icon={<Trash2 className="h-4 w-4" />}
           onClick={() => handleDeleteUser(row.id)}
@@ -156,7 +156,7 @@ export default function Admin() {
       header: 'Actions',
       render: (_, row: Shipment) => (
         <Button
-          variant="destructive"
+          variant="danger"
           size="sm"
           icon={<Trash2 className="h-4 w-4" />}
           onClick={() => handleDeleteShipment(row.id)}
@@ -214,9 +214,10 @@ export default function Admin() {
         </Card>
       </div>
 
+      {/* Create Shipment Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-secondary-800 rounded-xl max-w-md w-full p-4 sm:p-6 shadow-xl">
+          <div className="bg-white dark:bg-secondary-800 rounded-xl max-w-md w-full p-6 shadow-xl">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold">Create New Shipment</h3>
               <button onClick={() => setShowCreateModal(false)} className="text-secondary-500 hover:text-secondary-700">
