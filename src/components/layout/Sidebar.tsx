@@ -1,5 +1,5 @@
+
 import { NavLink, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import {
   LayoutDashboard,
   Package,
@@ -24,11 +24,11 @@ const navItems = [
 ];
 
 interface SidebarProps {
-  mobileOpen?: boolean;
-  setMobileOpen?: (open: boolean) => void;
+  mobileOpen: boolean;
+  setMobileOpen: (open: boolean) => void;
 }
 
-export default function Sidebar({ mobileOpen = false, setMobileOpen }: SidebarProps) {
+export default function Sidebar({ mobileOpen, setMobileOpen }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ export default function Sidebar({ mobileOpen = false, setMobileOpen }: SidebarPr
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setMobileOpen?.(false)}
+              onClick={() => setMobileOpen(false)}
               className="lg:hidden rounded-full p-1"
             >
               <X className="h-5 w-5" />
@@ -73,7 +73,7 @@ export default function Sidebar({ mobileOpen = false, setMobileOpen }: SidebarPr
           <NavLink
             key={item.to}
             to={item.to}
-            onClick={() => setMobileOpen?.(false)}
+            onClick={() => setMobileOpen(false)}
             className={({ isActive }) =>
               twMerge(
                 'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200',
@@ -113,22 +113,25 @@ export default function Sidebar({ mobileOpen = false, setMobileOpen }: SidebarPr
 
   return (
     <>
+      {/* Mobile overlay */}
       <div
         className={`fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden ${
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
-        onClick={() => setMobileOpen?.(false)}
+        onClick={() => setMobileOpen(false)}
       />
-      <motion.aside
-        animate={{ x: mobileOpen ? 0 : -280 }}
-        initial={{ x: -280 }}
-        transition={{ duration: 0.2, ease: 'easeInOut' }}
-        className={`fixed left-0 top-0 z-50 h-full w-72 bg-white dark:bg-secondary-900 border-r border-secondary-200 dark:border-secondary-800 flex flex-col lg:static lg:z-auto lg:translate-x-0 ${
-          mobileOpen ? 'shadow-xl' : ''
-        }`}
+
+      {/* Sidebar – always visible on desktop, slides on mobile */}
+      <div
+        className={`
+          fixed left-0 top-0 z-50 h-full w-72 bg-white dark:bg-secondary-900 border-r border-secondary-200 dark:border-secondary-800
+          flex flex-col transition-transform duration-300 ease-in-out
+          lg:relative lg:translate-x-0 lg:z-auto   /* <-- desktop: always visible */
+          ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}  /* mobile: slide */
+        `}
       >
         {content}
-      </motion.aside>
+      </div>
     </>
   );
 }
