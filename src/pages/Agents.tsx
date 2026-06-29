@@ -23,7 +23,7 @@ export default function Agents() {
 
   const fetchAgents = async () => {
     try {
-      const res = await api.get('/agentss');
+      const res = await api.get('/agents');
       setAgents(res.data);
     } catch (err) {
       toast.error('Failed to load agents');
@@ -37,7 +37,7 @@ export default function Agents() {
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this agent?')) return;
     try {
-      await api.delete(`/agentss/${id}`);
+      await api.delete(`/agents/${id}`);
       toast.success('Agent deleted');
       setAgents(agents.filter(a => a.id !== id));
     } catch (err) {
@@ -48,7 +48,7 @@ export default function Agents() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await api.post('/agentss', formData);
+      const res = await api.post('/agents', formData);
       toast.success('Agent created');
       setAgents([res.data, ...agents]);
       setShowModal(false);
